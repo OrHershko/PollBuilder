@@ -1,14 +1,1 @@
-[
-  {
-    "id": "0b58a468-06bf-44f0-9665-b15c08952710",
-    "question": "What is your favorite programming language?",
-    "options": [
-      "JavaScript",
-      "Python",
-      "Java",
-      "C#"
-    ],
-    "createdBy": "testuser",
-    "votes": {}
-  }
-]
+[]

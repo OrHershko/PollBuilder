@@ -1,6 +1,14 @@
 [
   {
-    "id": "testuser",
-    "username": "testuser"
+    "id": "testUser",
+    "username": "testUser"
+  },
+  {
+    "id": "voteUser",
+    "username": "voteUser"
+  },
+  {
+    "id": "nonCreator",
+    "username": "nonCreator"
   }
 ]

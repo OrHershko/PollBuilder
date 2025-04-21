@@ -168,7 +168,7 @@ export function createPollRoutes(pollService) {
       }
       
       const updatedPoll = await pollService.vote({
-        id,
+        pollId: id, // Changed 'id' to 'pollId'
         username,
         optionIndex: parseInt(optionIndex, 10)
       });

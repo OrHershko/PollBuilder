@@ -6,8 +6,16 @@
 
 import { PollService } from '../src/services/PollService.js';
 import { UserService } from '../src/services/UserService.js';
-import { PollStorage } from '../src/storage/PollStorage.js';
-import { UserStorage } from '../src/storage/UserStorage.js';
+// Use JsonFile storage for tests, requires cleanup
+import { JsonFilePollStorage } from '../src/storage/JsonFilePollStorage.js'; 
+import { JsonFileUserStorage } from '../src/storage/JsonFileUserStorage.js';
+import fs from 'fs/promises'; // Import fs for cleanup
+import path from 'path'; // Import path for cleanup
+import { fileURLToPath } from 'url'; // Import url for cleanup
+
+// Get directory name in ESM for cleanup
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const testDataDir = path.join(__dirname, 'test_data_pollservice'); // Use separate test data dir
 
 
 describe('PollService', () => {
@@ -22,16 +30,25 @@ describe('PollService', () => {
     creator: testCreator
   };
 
-  // Set up fresh instances before each test
+  // Set up fresh instances and cleanup before each test
   beforeEach(async () => {
-    // Use in-memory storage for tests
-    pollStorage = new PollStorage();
-    userStorage = new UserStorage();
+    // Clean up test data directory before each test
+    await fs.rm(testDataDir, { recursive: true, force: true });
+    await fs.mkdir(testDataDir, { recursive: true });
+
+    // Use JsonFile storage for tests
+    pollStorage = new JsonFilePollStorage(testDataDir); 
+    userStorage = new JsonFileUserStorage(testDataDir);
     userService = new UserService(userStorage);
     pollService = new PollService(pollStorage, userService);
     
     // Create a test user for all tests to use
     await userService.createUser(testCreator);
+  });
+
+  // Clean up test data directory after all tests
+  afterAll(async () => {
+    await fs.rm(testDataDir, { recursive: true, force: true });
   });
 
   describe('createPoll', () => {
@@ -89,34 +106,40 @@ describe('PollService', () => {
 
     it('should record a valid vote', async () => {
       const optionIndex = 1;
-      const updatedPoll = await pollService.vote(pollId, voter, optionIndex);
+      // Pass vote data as an object
+      const updatedPoll = await pollService.vote({ pollId, username: voter, optionIndex }); 
       
       // The vote should be recorded
       expect(updatedPoll.votes[voter]).toBe(optionIndex);
     });
 
     it('should reject vote from non-existent user', async () => {
-      await expect(pollService.vote(pollId, 'nonexistentuser', 1))
+      // Pass vote data as an object
+      await expect(pollService.vote({ pollId, username: 'nonexistentuser', optionIndex: 1 })) 
         .rejects.toThrow('does not exist');
     });
 
     it('should reject vote for non-existent poll', async () => {
-      await expect(pollService.vote('nonexistentpoll', voter, 1))
+      // Pass vote data as an object
+      await expect(pollService.vote({ pollId: 'nonexistentpoll', username: voter, optionIndex: 1 })) 
         .rejects.toThrow('not found');
     });
 
     it('should reject vote with invalid option index', async () => {
       const invalidIndex = testPollData.options.length; // Out of bounds
-      await expect(pollService.vote(pollId, voter, invalidIndex))
+      // Pass vote data as an object
+      await expect(pollService.vote({ pollId, username: voter, optionIndex: invalidIndex })) 
         .rejects.toThrow('Invalid option index');
     });
 
     it('should reject duplicate vote from same user', async () => {
       // First vote should succeed
-      await pollService.vote(pollId, voter, 1);
+      // Pass vote data as an object
+      await pollService.vote({ pollId, username: voter, optionIndex: 1 }); 
       
       // Second vote should fail
-      await expect(pollService.vote(pollId, voter, 2))
+      // Pass vote data as an object
+      await expect(pollService.vote({ pollId, username: voter, optionIndex: 2 })) 
         .rejects.toThrow('already voted');
     });
   });
@@ -175,8 +198,8 @@ describe('PollService', () => {
       await userService.createUser(voter);
       
       // Vote on two polls
-      await pollService.vote(poll1.id, voter, 0);
-      await pollService.vote(poll3.id, voter, 1);
+      await pollService.vote({ pollId: poll1.id, username: voter, optionIndex: 0 });
+      await pollService.vote({ pollId: poll3.id, username: voter, optionIndex: 1 });
     });
 
     it('should get polls voted by a specific user', async () => {

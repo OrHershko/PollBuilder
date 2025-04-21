@@ -5,18 +5,34 @@
  */
 
 import { UserService } from '../src/services/UserService.js';
-import { InMemoryStorage } from '../src/storage/InMemoryStorage.js';
-import { UserStorage } from '../src/storage/UserStorage.js';
+// Use JsonFile storage for tests, requires cleanup
+import { JsonFileUserStorage } from '../src/storage/JsonFileUserStorage.js'; 
+import fs from 'fs/promises'; // Import fs for cleanup
+import path from 'path'; // Import path for cleanup
+import { fileURLToPath } from 'url'; // Import url for cleanup
+
+// Get directory name in ESM for cleanup
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const testDataDir = path.join(__dirname, 'test_data_userservice'); // Use separate test data dir
 
 describe('UserService', () => {
   let userService;
   let userStorage;
 
-  // Set up fresh instances before each test
-  beforeEach(() => {
-    // Use in-memory storage for tests
-    userStorage = new UserStorage();
+  // Set up fresh instances and cleanup before each test
+  beforeEach(async () => {
+    // Clean up test data directory before each test
+    await fs.rm(testDataDir, { recursive: true, force: true });
+    await fs.mkdir(testDataDir, { recursive: true });
+
+    // Use JsonFile storage for tests
+    userStorage = new JsonFileUserStorage(testDataDir); 
     userService = new UserService(userStorage);
+  });
+
+  // Clean up test data directory after all tests
+  afterAll(async () => {
+    await fs.rm(testDataDir, { recursive: true, force: true });
   });
 
   describe('createUser', () => {
