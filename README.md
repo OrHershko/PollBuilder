@@ -2,10 +2,12 @@
 
 ## Team Info
 
-*   **Full Name:** [Your Full Name]
-    *   **Student ID:** [Your Student ID]
-*   **Full Name:** [Partner's Full Name]
-    *   **Student ID:** [Partner's Student ID]
+*   **Full Name:** Or Herhsko
+*   **Full Name:** Tom
+*   **Full Name:** Adva Levine
+*   **Full Name:** Amir
+
+
 
 *(Please fill in the actual names and IDs)*
 
