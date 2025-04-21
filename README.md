@@ -1,19 +1,15 @@
 # PollBuilder API Documentation
 
-## Team Info
+## Team Panda Info
 
-*   **Full Name:** Or Herhsko
-*   **Full Name:** Tom
-*   **Full Name:** Adva Levine
-*   **Full Name:** Amir
-
-
-
-*(Please fill in the actual names and IDs)*
+*   **Full Name:** Or Herhsko - 322316514
+*   **Full Name:** Tom Braudo - 324182914
+*   **Full Name:** Adva Levine - 319098133
+*   **Full Name:** Amir Azmon - 213475403
 
 ## Design Assumptions
 
-*   **Framework:** The application uses Node.js with the Express framework for the web server.
+*   **Framework:** The application uses Node.js (ES6+) with the Express framework for the web server.
 *   **Persistence:** Data (users and polls) is persisted to JSON files located in the `data/` directory ([`data/users.json`](data/users.json), [`data/polls.json`](data/polls.json)).
 *   **Architecture:** The application follows a layered architecture:
     *   **Routes:** Handle incoming HTTP requests and responses ([`src/routes/userRoutes.js`](src/routes/userRoutes.js), [`src/routes/pollRoutes.js`](src/routes/pollRoutes.js)).
@@ -175,12 +171,12 @@
 
 **Specific Storage Implementations:**
 
-*   **User Storage** ([`JsonFileUserStorage`](src/storage/JsonFileUserStorage.js), [`UserStorage`](src/storage/UserStorage.js)):
+*   **User Storage** ([`JsonFileUserStorage`](src/storage/JsonFileUserStorage.js)):
     *   `createUser(username: string): Promise<User>`
     *   `getUserByUsername(username: string): Promise<User | null>`
     *   `usernameExists(username: string): Promise<boolean>`
     *   `getAllUsers(): Promise<User[]>`
-*   **Poll Storage** ([`JsonFilePollStorage`](src/storage/JsonFilePollStorage.js), [`PollStorage`](src/storage/PollStorage.js)):
+*   **Poll Storage** ([`JsonFilePollStorage`](src/storage/JsonFilePollStorage.js)):
     *   `createPoll(id: string, pollData: { question: string, options: string[], createdBy: string }): Promise<Poll>`
     *   `getPollsByCreator(username: string): Promise<Poll[]>`
     *   `getPollsVotedByUser(username: string): Promise<Poll[]>`
@@ -189,19 +185,28 @@
 
 ## Team Retrospective
 
-*(This section should be filled out by the team based on their experience.)*
+* What worked well - We had two productive meetings (Discord), used GitHub for coordination, and GitHub Copilot helped with code writing. Communication was clear.
 
-**Reflections on Collaboration:**
+* Challenges - At first, we weren’t sure how to split the work. Also, Copilot sometimes suggested complex designs we had to simplify.
 
-*   What worked well in terms of teamwork and communication?
-*   What challenges did we face working together?
-*   How did we resolve disagreements or different approaches?
-*   How was the workload distributed? Was it fair?
+* Resolving disagreements - We discussed each approach and chose what fit the assignment best. Team decisions were made together.
+
+* Workload distribution - At first, we planned to divide tasks, but ended up working together using Copilot, reviewing and refining code as a team. It felt fair.
 
 **Lessons Learned on AI Usage:**
 
-*   How did we use AI tools (like GitHub Copilot) during development?
-*   What were the benefits of using AI? (e.g., code suggestions, boilerplate generation, debugging help, documentation assistance)
-*   What were the limitations or challenges? (e.g., incorrect suggestions, understanding context, over-reliance)
+*   How did we use AI tools during development?
+We used Copilot for writing code, generating boilerplate, and getting quick suggestions. It helped us move faster.
+
+*   What were the benefits of using AI? 
+It saved time, helped with syntax, and gave us ideas when we were stuck. Also useful for documentation and debugging hints.
+
+*   What were the limitations or challenges?
+Sometimes the suggestions were wrong or too complex. It didn’t always understand the context of our task.
+
 *   Did using AI change our development process? How?
+Yes, instead of splitting tasks, we used Copilot to write core parts together and then edited as a team.
+
 *   What would we do differently regarding AI usage next time?
+Next time, we’d review suggestions more carefully and use Copilot more for ideas, less as a full solution.
+

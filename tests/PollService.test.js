@@ -255,7 +255,7 @@ describe('PollService', () => {
       
       // Try to delete another user's poll
       await expect(pollService.deletePoll(pollId, otherUser))
-        .rejects.toThrow('Only the creator can delete a poll');
+        .rejects.toThrow('Forbidden: Only the creator can delete this poll');
     });
 
     it('should throw error for non-existent poll', async () => {
