@@ -58,10 +58,8 @@ export function createPollRoutes(pollService) {
           error.message.includes('must be a non-empty')) {
         res.status(400).json({ error: error.message });
       } else {
-        // Log unexpected errors and return a generic 500
         console.error('Error creating poll:', error);
         res.status(500).json({ error: 'Internal server error while creating poll' });
-        // Optionally: next(error);
       }
     }
   });
@@ -96,10 +94,8 @@ export function createPollRoutes(pollService) {
       if (error.message.includes('does not exist')) {
         res.status(404).json({ error: error.message }); // Creator user not found
       } else {
-        // Log unexpected errors and return a generic 500
         console.error('Error getting polls:', error);
         res.status(500).json({ error: 'Internal server error while getting polls' });
-        // Optionally: next(error);
       }
     }
   });
@@ -129,10 +125,8 @@ export function createPollRoutes(pollService) {
       if (error.message.includes('not found')) {
         res.status(404).json({ error: error.message }); // Poll not found
       } else {
-        // Log unexpected errors and return a generic 500
         console.error(`Error getting poll ${req.params.id}:`, error);
         res.status(500).json({ error: 'Internal server error while getting poll' });
-        // Optionally: next(error);
       }
     }
   });
@@ -175,10 +169,8 @@ export function createPollRoutes(pollService) {
       } else if (error.message.includes('Forbidden') || error.message.includes('Only the creator')) {
         res.status(403).json({ error: 'Forbidden: You do not have permission to delete this poll.' }); // Authorization failed
       } else {
-         // Log unexpected errors and return a generic 500
         console.error(`Error deleting poll ${req.params.id}:`, error);
         res.status(500).json({ error: 'Internal server error while deleting poll' });
-         // Optionally: next(error);
       }
     }
   });
@@ -204,7 +196,8 @@ export function createPollRoutes(pollService) {
            return res.status(400).json({ error: 'Poll ID parameter is required.' });
        }
       // Basic check for required body fields and types
-      if (username === undefined || typeof username !== 'string' || username.trim() === '' || optionIndex === undefined || typeof optionIndex !== 'number' || !Number.isInteger(optionIndex)) {
+      if (username === undefined || typeof username !== 'string' || username.trim() === ''
+       || optionIndex === undefined || typeof optionIndex !== 'number' || !Number.isInteger(optionIndex)) {
         return res.status(400).json({ 
           error: 'Invalid request body: Requires non-empty username (string) and optionIndex (integer).' 
         });
@@ -226,20 +219,18 @@ export function createPollRoutes(pollService) {
       res.status(200).json(updatedPoll);
     } catch (error) {
       // Handle specific errors from the service layer
-      if (error.message.includes('not found')) { // Could be poll or user not found
+      if (error.message.includes('not found')) { 
         res.status(404).json({ error: error.message }); 
-      } else if (error.message.includes('already voted') || error.message.includes('Invalid option index') || error.message.includes('Invalid vote data')) {
-        res.status(400).json({ error: error.message }); // Bad request (duplicate vote, invalid index)
-      } else if (error.message.includes('does not exist')) { // User not found specifically
-         res.status(404).json({ error: error.message }); // Treat non-existent user as Not Found
+      } else if (error.message.includes('already voted') || error.message.includes('Invalid option index')
+         || error.message.includes('Invalid vote data')) {
+        res.status(400).json({ error: error.message }); 
+      } else if (error.message.includes('does not exist')) {
+         res.status(404).json({ error: error.message }); 
       }
        else {
-         // Log unexpected errors and return a generic 500
         console.error(`Error voting on poll ${req.params.id}:`, error);
-        // Include specific error message from service if available and safe
         const errorMessage = error.message || 'Internal server error while processing vote';
         res.status(500).json({ error: `Internal server error: ${errorMessage}` }); 
-         // Optionally: next(error);
       }
     }
   });
@@ -269,10 +260,8 @@ export function createPollRoutes(pollService) {
       if (error.message.includes('not found')) {
         res.status(404).json({ error: error.message }); // Poll not found
       } else {
-        // Log unexpected errors and return a generic 500
         console.error(`Error getting results for poll ${req.params.id}:`, error);
         res.status(500).json({ error: 'Internal server error while getting poll results' });
-        // Optionally: next(error);
       }
     }
   });
